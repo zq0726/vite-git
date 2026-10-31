@@ -21,6 +21,10 @@
 
 1. 打开 GitHub 仓库 → **Settings** → **Pages** → **Build and deployment**；
 2. **Source** 选择 **GitHub Actions**（默认是 `Deploy from a branch`，不改会导致部署失败）；
+
+   > 工作流里的 `configure-pages` 已设置 `enablement: true`，Pages 未启用时会自动开启，
+   > 所以这一步通常可以跳过；若仍报 `Get Pages site failed`，再来手动开启一次。
+
 3. 确认 `.github/workflows/deploy.yml` 已经提交到仓库。
 
 > 注意顺序：必须**先提交工作流文件，再打 tag**。
@@ -221,13 +225,14 @@ history: createWebHistory(import.meta.env.BASE_URL)
 
 ## 六、常见问题排查
 
-| 现象                                   | 原因与解决办法                                                                                                                                   |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 推了 tag 但 Actions 没反应             | 工作流文件不在该 tag 指向的提交里；或 tag 不是 `v` 开头（如 `1.0.0` 不会触发）                                                                   |
-| 部署报 `Pages site not enabled`        | Settings → Pages 的 Source 没改成 **GitHub Actions**                                                                                             |
-| 线上白屏，控制台 asset 404             | `base` 不对，检查 `--base=/vite-git/` 是否与仓库名一致                                                                                           |
-| 直接访问 `/about` 是 GitHub 的 404 页  | 缺少 `dist/404.html`，检查 SPA fallback 那一步是否执行                                                                                           |
-| CI 报 `ERR_PNPM_OUTDATED_LOCKFILE`     | 本地改了依赖但没提交 `pnpm-lock.yaml`；本地跑一次 `pnpm install` 后一起提交                                                                      |
-| `commit-msg` 钩子拒绝提交              | 提交信息不符合约定式格式，参考第三节                                                                                                             |
-| `pre-commit` 报 `stylelint: not found` | `lint-staged.config.js` 里配了 `stylelint`，但它没装。解决：`pnpm add -D stylelint stylelint-config-standard`，或从配置里删掉 `stylelint` 那几行 |
-| 本地 Node 版本警告                     | `engines` 要求 `^22.18.0 \|\| >=24.12.0`，CI 用的是 Node 24，建议本地也升到 24                                                                   |
+| 现象                                                       | 原因与解决办法                                                                                                                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 推了 tag 但 Actions 没反应                                 | 工作流文件不在该 tag 指向的提交里；或 tag 不是 `v` 开头（如 `1.0.0` 不会触发）                                                                                |
+| 部署报 `Get Pages site failed` 或 `Pages site not enabled` | 仓库的 Pages 功能还没启用。打开 Settings → Pages 把 Source 改成 **GitHub Actions**；工作流已设置 `enablement: true`，通常会自动创建站点，仍失败就手动开启一次 |
+| 线上白屏，控制台 asset 404                                 | `base` 不对，检查 `--base=/vite-git/` 是否与仓库名一致                                                                                                        |
+| 直接访问 `/about` 是 GitHub 的 404 页                      | 缺少 `dist/404.html`，检查 SPA fallback 那一步是否执行                                                                                                        |
+| CI 报 `ERR_PNPM_OUTDATED_LOCKFILE`                         | 本地改了依赖但没提交 `pnpm-lock.yaml`；本地跑一次 `pnpm install` 后一起提交                                                                                   |
+| `commit-msg` 钩子拒绝提交                                  | 提交信息不符合约定式格式，参考第三节                                                                                                                          |
+| `pre-commit` 报 `stylelint: not found`                     | `lint-staged.config.js` 里配了 `stylelint`，但它没装。解决：`pnpm add -D stylelint stylelint-config-standard`，或从配置里删掉 `stylelint` 那几行              |
+| 本地 Node 版本警告                                         | `engines` 要求 `^22.18.0 \|\| >=24.12.0`，CI 用的是 Node 24，建议本地也升到 24                                                                                |
+| Actions 日志出现 `Node.js 20 is deprecated` 警告           | 只是警告，不阻断运行；已把所有 Action 升到 Node 24 版本，不会再出现                                                                                           |
