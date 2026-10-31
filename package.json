@@ -13,7 +13,8 @@
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "prepare": "husky"
   },
   "dependencies": {
     "pinia": "^4.0.3",
@@ -21,6 +22,8 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@tsconfig/node24": "^24.0.5",
     "@types/jsdom": "^30.0.0",
     "@types/node": "^24.13.4",
@@ -34,8 +37,10 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-oxlint": "~1.82.0",
     "eslint-plugin-vue": "~10.11.0",
+    "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "jsdom": "^30.0.1",
+    "lint-staged": "^17.6.0",
     "npm-run-all2": "^9.0.3",
     "oxlint": "~1.82.0",
     "prettier": "3.9.6",
